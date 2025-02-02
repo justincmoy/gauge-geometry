@@ -1,6 +1,6 @@
 #include "graphics.h"
 #include "settings.h"
-#include "big-digits.h"
+#include "clock_area.h"
 #include "hands.h"
 #include "ticks.h"
 #include "weather.h"
@@ -122,7 +122,7 @@ void load_window(Window *window) {
 
 	// create big digits
 	digits_layer = layer_create(bounds);
-	init_digits(digits_layer);
+	ClockArea_init(digits_layer);
 
 	// create hands
 	hands_layer = layer_create(bounds);
@@ -143,7 +143,7 @@ void load_window(Window *window) {
 
 void update_style() {
 	bg_colour = settings.BgColour;
-	set_digits_colour(settings.TimeColour);
+	ClockArea_redraw();
 	date_colour = settings.DateColour;
 	update_hands_settings(
 		settings.HourHandColour,
@@ -170,7 +170,10 @@ void update_style() {
 }
 
 void update_time(unsigned short hour, unsigned short minute) {
-	set_digits(hour, minute);
+	struct tm timeInfo = {0};
+	timeInfo.tm_hour = hour;
+	timeInfo.tm_min = minute;
+	ClockArea_update_time(&timeInfo);
 
 	update_date_group_position(hour);
 
@@ -189,7 +192,7 @@ void update_date_month(char *date) {
 }
 
 void destroy_layers() {
-	destroy_digits();
+	ClockArea_deinit();
 	destroy_hands();
 
 	text_layer_destroy(day_text_layer);

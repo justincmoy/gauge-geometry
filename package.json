@@ -8,7 +8,8 @@
 	"private": true,
 	"dependencies": {
 		"pebble-clay": "^1.0.4",
-		"pebble-events": "^1.2.0"
+		"pebble-events": "^1.2.0",
+		"pebble-fctx": "^1.6.2"
 	},
 	"pebble": {
 		"displayName": "Gauge Geometry",
@@ -16,9 +17,9 @@
 		"sdkVersion": "3",
 		"enableMultiJS": true,
 		"targetPlatforms": [
-			"chalk",
-			"basalt",
 			"aplite",
+			"basalt",
+			"chalk",
 			"diorite",
 			"emery"
 		],
@@ -59,206 +60,14 @@
 					"characterRegex": "[A-Za-záäéû0-9 ]"
 				},
 				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_0",
-					"file": "century-gothic/0.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_1",
-					"file": "century-gothic/1.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_2",
-					"file": "century-gothic/2.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_3",
-					"file": "century-gothic/3.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_4",
-					"file": "century-gothic/4.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_5",
-					"file": "century-gothic/5.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_6",
-					"file": "century-gothic/6.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_7",
-					"file": "century-gothic/7.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_8",
-					"file": "century-gothic/8.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_9",
-					"file": "century-gothic/9.png",
-					"targetPlatforms": [
-						"basalt",
-						"chalk",
-						"emery"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_0",
-					"file": "century-gothic/0-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_1",
-					"file": "century-gothic/1-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_2",
-					"file": "century-gothic/2-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_3",
-					"file": "century-gothic/3-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_4",
-					"file": "century-gothic/4-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_5",
-					"file": "century-gothic/5-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_6",
-					"file": "century-gothic/6-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_7",
-					"file": "century-gothic/7-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_8",
-					"file": "century-gothic/8-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
-				},
-				{
-					"type": "bitmap",
-					"name": "CENTURY_GOTHIC_9",
-					"file": "century-gothic/9-bw.png",
-					"memoryFormat": "1Bit",
-					"targetPlatforms": [
-						"aplite",
-						"diorite"
-					]
+					"file": "AvenirNextRegular.ffont",
+					"name": "AVENIR_REGULAR_FFONT",
+					"type": "raw"
 				}
 			]
 		}
+	},
+	"devDependencies": {
+		"pebble-fctx-compiler": "^1.2.2"
 	}
 }
