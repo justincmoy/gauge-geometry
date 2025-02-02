@@ -17,7 +17,7 @@
 
 void load_window(Window *window);
 void update_style();
-void update_time(unsigned short hour, unsigned short minute);
+void update_time(struct tm* time_info);
 void update_day_of_week(char *day);
 void update_date_month(char *date);
 GColor get_bg_colour();

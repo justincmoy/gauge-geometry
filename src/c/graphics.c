@@ -169,15 +169,28 @@ void update_style() {
 	text_layer_set_text_color(date_shadow_text_layer_b, date_shadow);
 }
 
-void update_time(unsigned short hour, unsigned short minute) {
-	struct tm timeInfo = {0};
-	timeInfo.tm_hour = hour;
-	timeInfo.tm_min = minute;
-	ClockArea_update_time(&timeInfo);
+static unsigned short get_display_hour(unsigned short hour) {
+	if (clock_is_24h_style()) {
+		return hour;
+	}
+
+	// Converts "0" to "12"
+	unsigned short display_hour = hour % 12;
+	return display_hour ? display_hour : 12;
+}
+
+static void display_time(struct tm *tick_time) {
+	int hour = get_display_hour(tick_time->tm_hour);
+	int minute = tick_time->tm_min;
 
 	update_date_group_position(hour);
-
 	set_hands(hour, minute);
+}
+
+
+void update_time(struct tm *time_info) {
+	ClockArea_update_time(time_info);
+	display_time(time_info);
 }
 
 void update_day_of_week(char *day) {

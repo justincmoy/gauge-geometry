@@ -13,24 +13,6 @@ static bool last_charging_state;
 // #define DEBUGGING_TIME
 // #define DEMO_MODE
 
-
-static unsigned short get_display_hour(unsigned short hour) {
-	if (clock_is_24h_style()) {
-		return hour;
-	}
-
-	// Converts "0" to "12"
-	unsigned short display_hour = hour % 12;
-	return display_hour ? display_hour : 12;
-}
-
-static void display_time(struct tm *tick_time) {
-	int hour = get_display_hour(tick_time->tm_hour);
-	int minute = tick_time->tm_min;
-
-	update_time(hour, minute);
-}
-
 static void display_date(struct tm *tick_time) {
 	static char day_buffer[5], date_buffer[10];
 	strftime(day_buffer, 5, "%a", tick_time);
@@ -62,7 +44,7 @@ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
 		display_date(tick_time);
 	}
 
-	display_time(tick_time);
+	update_time(tick_time);
 
 	// Get weather update every 30 minutes
 	if(tick_time->tm_min % 30 == 0) {
@@ -107,7 +89,7 @@ static void refresh_date_time() {
 	time_t now = time(NULL);
 	struct tm *tick_time = localtime(&now);
 
-	display_time(tick_time);
+	update_time(tick_time);
 	display_date(tick_time);
 }
 
