@@ -1,29 +1,26 @@
 #include <pebble.h>
 #include <pebble-fctx/fctx.h>
-#include <pebble-fctx/fpath.h>
 #include <pebble-fctx/ffont.h>
 #include "clock_area.h"
 #include "settings.h"
 
 #define ROUND_VERTICAL_PADDING 15
 
-char time_hours[3];
-char time_minutes[3];
+static char time_hours[3];
+static char time_minutes[3];
 
-Layer* clock_area_layer;
-FFont* hours_font;
-FFont* minutes_font;
+static Layer* clock_area_layer;
+static FFont* hours_font;
+static FFont* minutes_font;
 
 // just allocate all the fonts at startup because i don't feel like
 // dealing with allocating and deallocating things
-FFont* avenir;
+static FFont* avenir;
 // FFont* avenir_bold;
 // FFont* leco;
 
-GRect screen_rect;
-
 // "private" functions
-void update_fonts() {
+static void update_fonts() {
   hours_font = avenir;
   minutes_font = avenir;
  /*
@@ -52,11 +49,12 @@ void update_fonts() {
   */
 }
 
-void update_clock_area_layer(Layer *l, GContext* ctx) {
+static void update_clock_area_layer(Layer *l, GContext* ctx) {
   // check layer bounds
   GRect bounds = layer_get_unobstructed_bounds(l);
 
   #ifdef PBL_ROUND
+    GRect screen_rect = layer_get_bounds(l);
     bounds = GRect(0, ROUND_VERTICAL_PADDING, screen_rect.size.w, screen_rect.size.h - ROUND_VERTICAL_PADDING * 2);
   #endif
 
@@ -139,7 +137,6 @@ void update_clock_area_layer(Layer *l, GContext* ctx) {
 void ClockArea_init(Layer *layer) {
   // record the screen size, since we NEVER GET IT AGAIN
   clock_area_layer = layer;
-  screen_rect = layer_get_bounds(clock_area_layer);
   // screen_rect = layer_get_bounds(window_get_root_layer(window));
 
   /*
