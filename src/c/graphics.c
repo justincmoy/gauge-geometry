@@ -7,8 +7,8 @@
 
 static Layer* window_layer;
 
-static TextLayer *day_text_layer, *date_text_layer, *day_shadow_text_layer, *date_shadow_text_layer_a, *date_shadow_text_layer_b;
-static Layer *date_group_layer, *digits_layer, *ticks_layer, *hands_layer, *temp_range_layer, *temp_now_layer;
+static TextLayer *day_text_layer, *date_text_layer, *shadow_text_layer;
+static Layer *date_group_layer, *digits_layer, *ticks_layer, *hands_layer, *temp_layer;
 
 static GColor bg_colour;
 static GColor date_colour;
@@ -70,21 +70,14 @@ static void init_text_layers(GRect bounds) {
 	date_group_layer = layer_create(GRect(0, top, width, line_height*3.5));
 
 	day_text_layer = text_layer_create(GRect(0, 0, width, line_height*1.5));
-	day_shadow_text_layer = text_layer_create(GRect(TEXT_SHADOW_OFFSET, TEXT_SHADOW_OFFSET, width, line_height*1.5));
-
+	shadow_text_layer = text_layer_create(GRect(TEXT_SHADOW_OFFSET, TEXT_SHADOW_OFFSET, width, line_height*3.5));
 	date_text_layer = text_layer_create(GRect(0, line_height, width, line_height*2.5));
-	date_shadow_text_layer_a = text_layer_create(GRect(TEXT_SHADOW_OFFSET, line_height + TEXT_SHADOW_OFFSET, width, line_height*2.5));
-	date_shadow_text_layer_b = text_layer_create(GRect(TEXT_SHADOW_OFFSET, line_height - TEXT_SHADOW_OFFSET, width, line_height*2.5));
 
 	init_text_style(day_text_layer);
-	init_text_style(day_shadow_text_layer);
+	init_text_style(shadow_text_layer);
 	init_text_style(date_text_layer);
-	init_text_style(date_shadow_text_layer_a);
-	init_text_style(date_shadow_text_layer_b);
 
-	layer_add_child(date_group_layer, text_layer_get_layer(day_shadow_text_layer));
-	layer_add_child(date_group_layer, text_layer_get_layer(date_shadow_text_layer_a));
-	layer_add_child(date_group_layer, text_layer_get_layer(date_shadow_text_layer_b));
+	layer_add_child(date_group_layer, text_layer_get_layer(shadow_text_layer));
 	layer_add_child(date_group_layer, text_layer_get_layer(day_text_layer));
 	layer_add_child(date_group_layer, text_layer_get_layer(date_text_layer));
 }
@@ -112,9 +105,8 @@ void load_window(Window *window) {
 	init_text_layers(bounds);
 
 	// create temperature gauge
-	temp_range_layer = layer_create(bounds);
-	temp_now_layer = layer_create(bounds);
-	init_weather(temp_range_layer, temp_now_layer);
+	temp_layer = layer_create(bounds);
+	init_weather(temp_layer, temp_layer);
 
 	// create ticks
 	ticks_layer = layer_create(bounds);
@@ -129,10 +121,9 @@ void load_window(Window *window) {
 	init_hands(hands_layer);
 
 	// add layers, foreground last
-	layer_add_child(window_layer, temp_range_layer);
+	layer_add_child(window_layer, temp_layer);
 	layer_add_child(window_layer, digits_layer);
 	layer_add_child(window_layer, ticks_layer);
-	layer_add_child(window_layer, temp_now_layer);
 	layer_add_child(window_layer, hands_layer);
 	layer_add_child(window_layer, date_group_layer);
 
@@ -164,9 +155,7 @@ void update_style() {
 	text_layer_set_text_color(day_text_layer, date_colour);
 	text_layer_set_text_color(date_text_layer, date_colour);
 	GColor date_shadow = get_stroke_colour_for_fill(date_colour);
-	text_layer_set_text_color(day_shadow_text_layer, date_shadow);
-	text_layer_set_text_color(date_shadow_text_layer_a, date_shadow);
-	text_layer_set_text_color(date_shadow_text_layer_b, date_shadow);
+	text_layer_set_text_color(shadow_text_layer, date_shadow);
 }
 
 static unsigned short get_display_hour(unsigned short hour) {
@@ -195,13 +184,16 @@ void update_time(struct tm *time_info) {
 
 void update_day_of_week(char *day) {
 	text_layer_set_text(day_text_layer, day);
-	text_layer_set_text(day_shadow_text_layer, day);
+	text_layer_set_text(shadow_text_layer, day);
 }
 
 void update_date_month(char *date) {
 	text_layer_set_text(date_text_layer, date);
-	text_layer_set_text(date_shadow_text_layer_a, date);
-	text_layer_set_text(date_shadow_text_layer_b, date);
+	// Update shadow layer with combined day and date text
+	static char combined_text[50];
+	const char* day_text = text_layer_get_text(day_text_layer);
+	snprintf(combined_text, sizeof(combined_text), "%s\n%s", day_text ? day_text : "", date);
+	text_layer_set_text(shadow_text_layer, combined_text);
 }
 
 void destroy_layers() {
@@ -209,17 +201,14 @@ void destroy_layers() {
 	destroy_hands();
 
 	text_layer_destroy(day_text_layer);
-	text_layer_destroy(day_shadow_text_layer);
+	text_layer_destroy(shadow_text_layer);
 	text_layer_destroy(date_text_layer);
-	text_layer_destroy(date_shadow_text_layer_a);
-	text_layer_destroy(date_shadow_text_layer_b);
 
 	layer_destroy(digits_layer);
 	layer_destroy(ticks_layer);
 	layer_destroy(hands_layer);
 	layer_destroy(date_group_layer);
-	layer_destroy(temp_range_layer);
-	layer_destroy(temp_now_layer);
+	layer_destroy(temp_layer);
 }
 
 

@@ -21,7 +21,7 @@ static GColor temp_now_colour;
 static bool temp_range_colour_defined = false;
 static bool temp_now_colour_defined = false;
 
-static Layer *temp_range_layer, *temp_now_layer;
+static Layer *temp_layer;
 
 // Celsius to angle. Minute marks correspond to degrees
 // Gauge on clockface goes clockwise from 0 to 60C
@@ -135,11 +135,16 @@ static void clear_weather_cache() {
 	temp_now_defined = false;
 }
 
+static void temp_combined_update_proc(Layer *layer, GContext *ctx) {
+	// Draw temperature range first (background)
+	temp_range_update_proc(layer, ctx);
+	// Draw current temperature on top (foreground)
+	temp_now_update_proc(layer, ctx);
+}
+
 void init_weather(Layer *range_layer, Layer *now_layer) {
-	temp_range_layer = range_layer;
-	temp_now_layer = now_layer;
-	layer_set_update_proc(temp_range_layer, temp_range_update_proc);
-	layer_set_update_proc(temp_now_layer, temp_now_update_proc);
+	temp_layer = range_layer; // Use the same layer for both
+	layer_set_update_proc(temp_layer, temp_combined_update_proc);
 
 	temp_unit = settings.TempUnit;
 
@@ -167,7 +172,7 @@ void init_weather(Layer *range_layer, Layer *now_layer) {
 void set_temp_range_colour(GColor colour) {
 	if (!temp_range_colour_defined || !gcolor_equal(temp_range_colour, colour)) {
 		temp_range_colour = colour;
-		layer_mark_dirty(temp_range_layer);
+		layer_mark_dirty(temp_layer);
 	}
 	temp_range_colour_defined = true;
 }
@@ -175,7 +180,7 @@ void set_temp_range_colour(GColor colour) {
 void set_temp_now_colour(GColor colour) {
 	if (!temp_now_colour_defined || !gcolor_equal(temp_now_colour, colour)) {
 		temp_now_colour = colour;
-		layer_mark_dirty(temp_now_layer);
+		layer_mark_dirty(temp_layer);
 	}
 	temp_now_colour_defined = true;
 }
@@ -185,8 +190,7 @@ void check_temp_unit_change(char new_temp_unit) {
 	if (new_temp_unit != temp_unit) {
 		clear_weather_cache();
 
-		layer_mark_dirty(temp_range_layer);
-		layer_mark_dirty(temp_now_layer);
+		layer_mark_dirty(temp_layer);
 	}
 	temp_unit = new_temp_unit;
 }
@@ -195,19 +199,18 @@ void update_temp_range(int min, int max) {
 	temp_min = min;
 	temp_max = max;
 	temp_range_defined = true;
-	layer_mark_dirty(temp_range_layer);
+	layer_mark_dirty(temp_layer);
 }
 
 void update_temp_now(int now) {
 	temp_now = now;
 	temp_now_defined = true;
-	layer_mark_dirty(temp_now_layer);
+	layer_mark_dirty(temp_layer);
 }
 
 void enable_temp(bool enabled) {
-	if (layer_get_hidden(temp_now_layer) != !enabled) {
-		layer_set_hidden(temp_range_layer, !enabled);
-		layer_set_hidden(temp_now_layer, !enabled);
+	if (layer_get_hidden(temp_layer) != !enabled) {
+		layer_set_hidden(temp_layer, !enabled);
 	}
 }
 
